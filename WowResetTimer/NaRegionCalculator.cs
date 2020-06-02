@@ -4,7 +4,7 @@ namespace WowResetTimer
 {
     public class NaRegionCalculator : RegionCalculator
     {
-        public TimeSpan CalculateDaily(DateTime now)
+        public TimeSpan CalculateWeekly(DateTime now)
         {
             int daysTillReset = ((int) DayOfWeek.Tuesday - (int) now.DayOfWeek + 7) % 7;
 
@@ -15,9 +15,23 @@ namespace WowResetTimer
             return nextReset.Subtract(now);
         }
 
-        public TimeSpan CalculateWeekly(DateTime now)
+        public TimeSpan CalculateDaily(DateTime now)
         {
-            throw new NotImplementedException();
+            DateTime nextReset;
+            TimeSpan nextResetTime = new TimeSpan(15, 0, 0);
+
+            if (now.Hour < 15)
+            {
+                nextReset = now.Add(nextResetTime);
+                nextReset = nextReset.Date + nextResetTime;
+
+                return nextReset.Subtract(now);
+            }
+
+            nextReset = now.Date.AddDays(1).Date;
+            nextReset = nextReset.Date + nextResetTime;
+
+            return nextReset.Subtract(now);
         }
     }
 }
